@@ -8,4 +8,8 @@
 <p>Starts at: {{ event.start_time }}</p>
 <p>Ends at: {{ event.end_time }}</p>
 
+{% for category in event.categories.all %}
+    {{ category.title }}
+{% endfor %}
+
 {% endblock %}

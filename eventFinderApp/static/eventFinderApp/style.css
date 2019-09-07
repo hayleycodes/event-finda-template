@@ -32,10 +32,12 @@ a {
     color: #ff006f;
 }
 
-#new-event {
-    width: 100%;
+#new-event-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #ff006f;
-    color: #fff;
+    color: #fff !important;
     border: 1px solid #ff006f;
     border-radius: 5px;
     font-size: 1.5rem;
