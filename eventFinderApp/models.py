@@ -1,5 +1,4 @@
 from django.db import models
-from django.forms import ModelForm
 
 
 class Event(models.Model):
@@ -18,9 +17,3 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class EventForm(ModelForm):
-    class Meta:
-        model = Event
-        fields = ['title', 'location', 'start_time', 'end_time']

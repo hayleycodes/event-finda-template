@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 
@@ -11,7 +10,7 @@ urlpatterns = [
     # event-finder/1
     path('<int:pk>/', views.EventView.as_view(), name='event'),
     # event-finder/new-event
-    path('new-event/', views.createNewEvent, name='newEvent'),
+    path('new-event/', views.AddEventView.as_view(), name='newEvent'),
     # event-finder/my-account
-    path('my-account/', views.account, name='account')
+    path('my-account/', views.account, name='account'),
 ]
