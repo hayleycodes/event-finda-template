@@ -1,10 +1,9 @@
-from django.conf.urls import url
-from django.contrib import admin
-# from django.contrib.auth import views as auth_views
+from django.urls import path
 from . import views
 
 app_name = 'users'
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # users/1
+    path('<int:pk>/', views.AccountView.as_view(), name='account'),
 ]

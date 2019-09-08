@@ -18,6 +18,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path(r'', include('eventFinderApp.urls'), name='eventFinderApp'),
-    path('users/', include('django.contrib.auth.urls'), name='users'),
+    path('users/', include('users.urls'), name='users'),
+    path('users/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.views import generic
+from .models import CustomUser
 
-# def login():
-#     return render(request, 'users/login.html')
 
-# def logout():
-#     return render(request, 'users/logout.html')
+class AccountView(generic.DetailView):
+    model = CustomUser
+    template_name = 'users/account.html'
+    context_object_name = 'user'

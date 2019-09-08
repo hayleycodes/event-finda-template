@@ -36,6 +36,10 @@ nav {
     display: flex;
 }
 
+#nav-user-buttons {
+    display: flex;
+}
+
 nav p {
     margin: 0;
 }
