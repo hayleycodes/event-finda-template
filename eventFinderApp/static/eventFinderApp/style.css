@@ -24,6 +24,22 @@ header {
     margin-bottom: 20px;
 }
 
+#header-link {
+    text-decoration: none;
+}
+
+#header-link h2 {
+    color: #000;
+}
+
+nav {
+    display: flex;
+}
+
+nav p {
+    margin: 0;
+}
+
 nav a {
     margin: 0 10px;
 }
