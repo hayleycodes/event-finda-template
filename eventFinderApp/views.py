@@ -45,6 +45,10 @@ class AddEventView(generic.CreateView):
     # we have to use reverse_lazy so that urls.py can load our class
     # and not get stuck in a recursive loop 
 
+    def form_valid(self, form):
+        form.instance.host = self.request.user
+        return super().form_valid(form)
+
 
 def account(request):
     return render(request, 'eventFinderApp/account.html')
