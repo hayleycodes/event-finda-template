@@ -393,55 +393,6 @@ definitions:
               type: integer
             name:
               type: string
-      rewards:
-        type: array
-        items:
-          $ref: '#/definitions/Reward'
-  Progress:
-    type: object
-    description: >-
-      assumptions - we are only dealing with a single currency, money can be
-      represented in cents
-    properties:
-      target:
-        type: integer
-      currentPledged:
-        type: integer
-      numberOfBackers:
-        type: integer
-  Reward:
-    type: object
-    description: a event reward
-    properties:
-      id:
-        type: integer
-        description: id of the reward
-      amount:
-        type: integer
-        description: reward amount in cents
-      description:
-        type: string
-        description: reward description
-  Pledge:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: id of the backer
-      amount:
-        type: integer
-        description: pledge amount in cents
-      anonymous:
-        type: boolean
-        description: hide the username
-      card:
-        $ref: '#/definitions/CreditCard'
-  CreditCard:
-    type: object
-    properties:
-      authToken:
-        type: string
-        description: token
   User:
     type: object
     properties:
@@ -456,7 +407,9 @@ definitions:
         type: integer
       username:
         type: string
-      location:
+      first_name:
+        type: string
+      last_name:
         type: string
       email:
         type: string
