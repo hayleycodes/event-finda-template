@@ -3,6 +3,6 @@ from .models import Event
 from .serializers import EventSerializer
 
 
-class EventViewSet(viewsets.ModelViewSet):
+class EventsViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
