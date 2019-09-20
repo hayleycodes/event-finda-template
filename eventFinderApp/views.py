@@ -49,9 +49,3 @@ class AddEventView(generic.CreateView):
         form.instance.host = self.request.user
         return super().form_valid(form)
 
-
-def account(request):
-    return render(request, 'eventFinderApp/account.html')
-
-
-
