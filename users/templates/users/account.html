@@ -2,7 +2,13 @@
 
 {% block content %}
 
-<p>Username: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
+{% if user.is_authenticated %}
+    {% if user.pk == user_profile.pk %}
+        <p>Username: {{ user_profile.username }}</p>
+        <p>Email: {{ user_profile.email }}</p>
+    {% else %}
+        <p>You are not authorized to view this page.</p>
+    {% endif %}
+{% endif %}
 
 {% endblock %}

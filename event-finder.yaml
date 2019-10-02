@@ -3,7 +3,7 @@ info:
   description: ''
   version: 1.1.0
   title: SheCodes Free Event Finder
-basePath: /api/free-event-finder/
+basePath: /api/
 tags:
   - name: events
     description: All event-related endpoints
@@ -15,7 +15,9 @@ consumes:
   - application/json
 produces:
   - application/json
+
 paths:
+  
   /events:
     get:
       tags:
@@ -27,29 +29,25 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/eventOverview'
+              $ref: '#/definitions/EventOverview'
     post:
       tags:
         - events
       summary: Create event
-      description: Note that imageUri is required but is to be ignored
       security:
         - User: []
       parameters:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/eventData'
+            $ref: '#/definitions/EventData'
       responses:
         '201':
           description: OK
           schema:
             type: integer
-            description: event Id
-        '400':
-          description: Malformed event data
-        '401':
-          description: Unauthorized - create account to create event
+            description: event ID
+  
   '/events/{id}':
     get:
       tags:
@@ -65,13 +63,11 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/eventDetails'
-        '404':
-          description: Not found
+            $ref: '#/definitions/EventOverview'
     put:
       tags:
         - events
-      summary: Update event (open/close)
+      summary: Update event details
       security:
         - User: []
       parameters:
@@ -81,76 +77,14 @@ paths:
           description: Id of the event to update
           required: true
         - in: body
-          name: open
+          name: Event Data
           schema:
-            type: object
-            properties:
-              open:
-                type: boolean
-                description: Whether the event should be open
+            $ref: '#/definitions/EventData'
           required: true
       responses:
         '201':
           description: OK
-        '400':
-          description: Malformed request
-        '401':
-          description: Unauthorized - create account to update event
-        '403':
-          description: Forbidden - unable to update a event you do not own
-        '404':
-          description: Not found
-  '/events/{id}/rewards':
-    get:
-      tags:
-        - rewards
-      summary: View event rewards
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          description: event id
-          required: true
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Reward'
-        '404':
-          description: Not found
-    put:
-      tags:
-        - rewards
-      summary: Update event rewards
-      security:
-        - User: []
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          description: Id of the event to update
-          required: true
-        - in: body
-          name: rewards
-          description: Array of event rewards
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Reward'
-      responses:
-        '201':
-          description: OK
-        '400':
-          description: Malformed request
-        '401':
-          description: Unauthorized - create account to update event
-        '403':
-          description: Forbidden - unable to update a event you do not own
-        '404':
-          description: Not found
+  
   '/events/{id}/attending':
     post:
       tags:
@@ -162,26 +96,19 @@ paths:
         - in: path
           name: id
           type: integer
-          description: Id of the event
+          description: ID of the event
           required: true
         - in: body
-          name: body
+          name: user ID
           schema:
-            $ref: '#/definitions/Pledge'
+            $ref: '#/definitions/Attending'
       produces:
         - application/json
       responses:
         '200':
           description: OK
-        '400':
-          description: 'Bad user, event, or pledge details'
-        '401':
-          description: Unauthorized - create account to pledge to a event
-        '403':
-          description: Forbidden - cannot pledge to own event - this is fraud!
-        '404':
-          description: Not found
-  /users:
+  
+  '/users':
     post:
       tags:
         - users
@@ -200,21 +127,20 @@ paths:
           schema:
             type: integer
             description: Id of the created user
-        '400':
-          description: Malformed request
-  /users/login:
+  
+  '/users/login':
     post:
       tags:
         - users
       summary: Logs user into the system
       parameters:
         - name: username
-          in: query
+          in: formData
           description: The user name for login
           required: true
           type: string
         - name: password
-          in: query
+          in: formData
           description: The password for login in clear text
           required: true
           type: string
@@ -223,8 +149,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/LogInResponse'
-        '400':
-          description: Invalid username/password supplied
+      consumes:
+        - application/x-www-form-urlencoded
+  
   '/users/logout':
     post:
       tags:
@@ -236,28 +163,27 @@ paths:
       responses:
         '200':
           description: OK
-        '401':
-          description: Unauthorized - already logged out
+  
   '/users/{id}':
     get:
       tags:
         - users
-      summary: Get user by user id
-      description: ''
+      summary: View personal account info
+      security:
+        - User: []
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           type: integer
+          description: ID of the user
+          required: true
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/PublicUser'
-        '400':
-          description: Invalid id supplied
-        '404':
-          description: User not found
+            $ref: '#/definitions/User'
+      produces:
+        - application/json
     put:
       tags:
         - users
@@ -278,14 +204,8 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
-        '400':
-          description: Malformed request
-        '401':
-          description: Unauthorized - not logged in
-        '403':
-          description: Forbidden - account not owned
-        '404':
-          description: User not found
+        '200':
+          description: User edited
     delete:
       tags:
         - users
@@ -302,18 +222,36 @@ paths:
       responses:
         '200':
           description: User deleted
-        '401':
-          description: Unauthorized - not logged in
-        '403':
-          description: Forbidden - account not owned
-        '404':
-          description: User not found
+
+
 definitions:
-  eventOverview:
+  
+  EventOverview:
     type: object
-    description: >-
-      Used for the GET - events/ endpoint. This contains a subset of the
-      event data.
+    description: object containing event
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      location:
+        type: string
+      start_time:
+        type: string
+      end_time:
+        type: string
+      categories:
+        type: string
+      host:
+        $ref: '#/definitions/PublicUser'
+      attending:
+        type: array
+        items:
+          $ref: '#/definitions/PublicUser'
+  
+  EventData:
+    type: object
+    description: object containing event
     properties:
       id:
         type: integer
@@ -332,123 +270,27 @@ definitions:
         properties:
           id:
             type: integer
-          name:
-            type: string
-  eventDetails:
-    type: object
-    description: >-
-      object containing event with dynamic content (backers, progress,
-      rewards)
-    properties:
-      event:
-        $ref: '#/definitions/event'
-      progress:
-        $ref: '#/definitions/Progress'
-      backers:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: integer
-            amount:
-              type: integer
-  event:
-    type: object
-    description: 'object containing event, and generated data (creation date, id)'
-    properties:
-      id:
-        type: integer
-      creationDate:
-        type: integer
-      data:
-        $ref: '#/definitions/eventData'
-  eventData:
-    type: object
-    description: object containing raw event data.
-    required:
-      - title
-      - subtitle
-      - description
-      - creators
-      - target
-    properties:
-      title:
-        type: string
-      subtitle:
-        type: string
-      description:
-        type: string
-      imageUri:
-        type: string
-      target:
-        type: integer
-        description: target amount in cents
-      creators:
-        type: array
-        items:
-          type: object
-          properties:
-            id:
-              type: integer
-            name:
-              type: string
-      rewards:
-        type: array
-        items:
-          $ref: '#/definitions/Reward'
-  Progress:
-    type: object
-    description: >-
-      assumptions - we are only dealing with a single currency, money can be
-      represented in cents
-    properties:
-      target:
-        type: integer
-      currentPledged:
-        type: integer
-      numberOfBackers:
-        type: integer
-  Reward:
-    type: object
-    description: a event reward
-    properties:
-      id:
-        type: integer
-        description: id of the reward
-      amount:
-        type: integer
-        description: reward amount in cents
-      description:
-        type: string
-        description: reward description
-  Pledge:
+  
+  Attending:
     type: object
     properties:
       id:
         type: integer
-        description: id of the backer
-      amount:
-        type: integer
-        description: pledge amount in cents
-      anonymous:
+        description: id of the user
+      attending:
         type: boolean
-        description: hide the username
-      card:
-        $ref: '#/definitions/CreditCard'
-  CreditCard:
-    type: object
-    properties:
-      authToken:
-        type: string
-        description: token
+        description: true if attending, false if not attending
+
   User:
     type: object
     properties:
       user:
         $ref: '#/definitions/PublicUser'
+      email:
+        type: string
       password:
         type: string
+  
   PublicUser:
     type: object
     properties:
@@ -456,10 +298,11 @@ definitions:
         type: integer
       username:
         type: string
-      location:
+      first_name:
         type: string
-      email:
+      last_name:
         type: string
+  
   LogInResponse:
     type: object
     properties:
@@ -469,6 +312,7 @@ definitions:
       token:
         type: string
         description: a token to be used for future calls
+
 securityDefinitions:
   User:
     type: apiKey
